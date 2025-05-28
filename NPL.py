@@ -38,6 +38,7 @@ class PDF(FPDF):
 def submit():
     try:
         data = request.json
+        print("[DEBUG] Received:", data)
         name = data.get("name")
         dob = data.get("dob")
         phone = data.get("phone")
