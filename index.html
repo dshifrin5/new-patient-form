@@ -3,55 +3,149 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>New Patient Form</title>
+  <title>New Patient Packet</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     canvas { border: 1px solid #ccc; width: 100%; height: 200px; }
+    .step { display: none; }
+    .step.active { display: block; }
   </style>
 </head>
 <body class="bg-light">
-  <div class="container p-4">
-    <h2 class="text-center mb-4">New Patient Form</h2>
-    <form id="patientForm">
-      <div class="mb-3">
-        <label class="form-label">Full Name</label>
-        <input type="text" class="form-control" name="name" required>
+  <div class="container py-4">
+    <h2 class="text-center mb-4">New Patient Packet</h2>
+
+    <form id="multiStepForm">
+      <!-- Step 1: Patient Info -->
+      <div class="step active" id="step1">
+        <h4>Patient Information</h4>
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" name="name" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Date of Birth</label>
+          <input type="date" class="form-control" name="dob" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" class="form-control" name="phone" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" name="email">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Insurance Provider</label>
+          <input type="text" class="form-control" name="insurance">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Reason for Visit</label>
+          <textarea class="form-control" name="reason"></textarea>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="nextStep()">Next</button>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Date of Birth</label>
-        <input type="date" class="form-control" name="dob" required>
+
+      <!-- Step 2: Responsible Party -->
+      <div class="step" id="step2">
+        <h4>Responsible Party</h4>
+        <div class="mb-3">
+          <label class="form-label">Name</label>
+          <input type="text" class="form-control" name="responsible_name">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Phone</label>
+          <input type="tel" class="form-control" name="responsible_phone">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" name="responsible_email">
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+        <button type="button" class="btn btn-primary" onclick="nextStep()">Next</button>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Phone Number</label>
-        <input type="tel" class="form-control" name="phone" required>
+
+      <!-- Step 3: Medical History -->
+      <div class="step" id="step3">
+        <h4>Medical History</h4>
+        <div class="mb-3">
+          <label class="form-label">Physician's Name</label>
+          <input type="text" class="form-control" name="physician">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Pharmacy Info</label>
+          <input type="text" class="form-control" name="pharmacy">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">List any medications</label>
+          <textarea class="form-control" name="medications"></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Allergies</label>
+          <textarea class="form-control" name="allergies"></textarea>
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+        <button type="button" class="btn btn-primary" onclick="nextStep()">Next</button>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input type="email" class="form-control" name="email">
+
+      <!-- Step 4: Acknowledgments -->
+      <div class="step" id="step4">
+        <h4>Consents and Policies</h4>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" required name="consent_privacy" id="consent_privacy">
+          <label class="form-check-label" for="consent_privacy">
+            I acknowledge and agree to the Privacy Practices (HIPAA)
+          </label>
+        </div>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" required name="consent_financial" id="consent_financial">
+          <label class="form-check-label" for="consent_financial">
+            I accept the Financial Responsibility Policy
+          </label>
+        </div>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" required name="consent_treatment" id="consent_treatment">
+          <label class="form-check-label" for="consent_treatment">
+            I give Informed Consent for Dental Treatment
+          </label>
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+        <button type="button" class="btn btn-primary" onclick="nextStep()">Next</button>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Insurance Provider</label>
-        <input type="text" class="form-control" name="insurance">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Reason for Visit</label>
-        <textarea class="form-control" name="reason" rows="3"></textarea>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Signature</label><br>
+
+      <!-- Step 5: Signature & Submit -->
+      <div class="step" id="step5">
+        <h4>Signature</h4>
         <canvas id="signaturePad"></canvas>
         <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="clearSignature()">Clear Signature</button>
+        <br><br>
+        <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+        <button type="submit" class="btn btn-success">Submit</button>
       </div>
-      <button type="submit" class="btn btn-primary w-100">Submit</button>
     </form>
   </div>
 
   <script>
-    const form = document.getElementById('patientForm');
+    let currentStep = 0;
+    const steps = document.querySelectorAll('.step');
+
+    function showStep(index) {
+      steps.forEach((step, i) => step.classList.toggle('active', i === index));
+    }
+
+    function nextStep() {
+      if (currentStep < steps.length - 1) currentStep++;
+      showStep(currentStep);
+    }
+
+    function prevStep() {
+      if (currentStep > 0) currentStep--;
+      showStep(currentStep);
+    }
+
     const canvas = document.getElementById('signaturePad');
     const ctx = canvas.getContext('2d');
 
-    // Resize canvas for high-DPI and responsive devices
     function resizeCanvas() {
       const ratio = window.devicePixelRatio || 1;
       canvas.width = canvas.offsetWidth * ratio;
@@ -63,7 +157,6 @@
     window.addEventListener("resize", resizeCanvas);
 
     let drawing = false;
-  
     function getPosition(e) {
       const rect = canvas.getBoundingClientRect();
       if (e.touches) {
@@ -78,7 +171,6 @@
         };
       }
     }
-
     function startDrawing(e) {
       e.preventDefault();
       drawing = true;
@@ -86,7 +178,6 @@
       ctx.beginPath();
       ctx.moveTo(pos.x, pos.y);
     }
-
     function draw(e) {
       if (!drawing) return;
       e.preventDefault();
@@ -97,34 +188,29 @@
       ctx.lineTo(pos.x, pos.y);
       ctx.stroke();
     }
-
     function stopDrawing(e) {
       e.preventDefault();
       drawing = false;
       ctx.beginPath();
     }
-
+    function clearSignature() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
     canvas.addEventListener('mousedown', startDrawing);
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseup', stopDrawing);
     canvas.addEventListener('mouseout', stopDrawing);
-
     canvas.addEventListener('touchstart', startDrawing, { passive: false });
     canvas.addEventListener('touchmove', draw, { passive: false });
     canvas.addEventListener('touchend', stopDrawing);
 
-    function clearSignature() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    form.addEventListener('submit', async function(e) {
+    document.getElementById('multiStepForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-  
-      const formData = new FormData(form);
+      const formData = new FormData(e.target);
       const obj = Object.fromEntries(formData);
       obj.signature = canvas.toDataURL();
-    
-      const response = await fetch('https://b9b0-47-18-38-63.ngrok-free.app/submit', {
+
+      const response = await fetch('https://880d-47-18-38-63.ngrok-free.app/submit', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(obj)
@@ -132,8 +218,9 @@
 
       if (response.ok) {
         alert('Form submitted successfully!');
-        form.reset();
+        e.target.reset();
         clearSignature();
+        showStep(0);
       } else {
         alert('Submission failed.');
       }
