@@ -1,3 +1,4 @@
+from flask_cors import CORS
 from flask import Flask, request, jsonify
 import os
 import base64
@@ -6,6 +7,7 @@ from fpdf import FPDF
 from datetime import datetime
 
 app = Flask(__name__)
+CORS(app)
 
 SAVE_FOLDER = "submissions"
 EXCEL_FILE = os.path.join(SAVE_FOLDER, "submissions.xlsx")
