@@ -19,12 +19,16 @@ RENDER_SERVICE_ID = "srv-d0r3fbfdiees73blq330"
 RENDER_API_KEY = "rnd_PVTkldXhRNq8DwWypV9FzBihMVjd"
 
 def start_ngrok():
+    # Kill any existing ngrok instances
+    subprocess.run(["taskkill", "/f", "/im", "ngrok.exe"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
     ngrok_proc = subprocess.Popen(["ngrok", "http", "5002"], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
     time.sleep(5)
     response = requests.get("http://localhost:4040/api/tunnels")
     public_url = response.json()["tunnels"][0]["public_url"]
     print(f"[+] Ngrok URL: {public_url}")
     return ngrok_proc, public_url
+
 
 def update_index_html(public_url):
     with open("index.html", "r", encoding="utf-8") as file:
@@ -62,15 +66,18 @@ def trigger_render_deploy():
 
 def auto_deploy():
     ngrok_proc, new_url = start_ngrok()
-    try:
-        changed = update_index_html(new_url)
-        if changed:
-            commit_and_push_changes()
-        else:
-            print("[~] Skipped commit and push.")
-        trigger_render_deploy()
-    finally:
-        ngrok_proc.terminate()
+    changed = update_index_html(new_url)
+    if changed:
+        commit_and_push_changes()
+    else:
+        print("[~] Skipped commit and push.")
+    trigger_render_deploy()
+
+    print("[⚠️] Ngrok will now remain running. Do NOT terminate this script.")
+    print("[🌐] Leave this terminal open to keep ngrok and your server alive.")
+    print("[🔗] Public URL:", new_url)
+    return ngrok_proc  # optionally return for manual control
+
 
 # === FORM PROCESSING ===
 SAVE_FOLDER = "submissions"
