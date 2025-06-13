@@ -1091,42 +1091,26 @@
 
 
   
-  document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-      if (!data.hasOwnProperty(cb.name)) {
-        data[cb.name] = "";
-      }
+  document.getElementById('multiStepForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const canvas = document.getElementById('signature-pad');
+    const formData = new FormData(e.target);
+    const obj = Object.fromEntries(formData);Add commentMore actions
+    obj.signature = canvas ? canvas.toDataURL() : '';
+
+    const response = await fetch('https://e7b9-47-18-38-63.ngrok-free.app/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(obj)
     });
 
-    // ✅ Signature
-    const signaturePad = window.signaturePad;
-    if (signaturePad && !signaturePad.isEmpty()) {
-      data.signature = signaturePad.toDataURL();
+    if (response.ok) {
+      alert('Form submitted successfully!');
+      e.target.reset();
+      if (canvas) clearSignature();
+      showStep(0);
     } else {
-      alert("Please sign before submitting.");
-      return;
-    }
-
-    // ✅ Submit to backend
-    try {
-      const res = await fetch('https://90cc-47-18-38-63.ngrok-free.app/submit', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
-
-      const result = await res.json();
-      if (result.status === "success") {
-        alert("Form submitted successfully!");
-        form.reset();
-        signaturePad.clear();
-      } else {
-        alert("Error: " + result.message);
-      }
-    } catch (err) {
-      console.error("❌ Submission failed:", err);
-      alert("Something went wrong. Please try again.");
+      alert('Submission failed.');
     }
   });
 
