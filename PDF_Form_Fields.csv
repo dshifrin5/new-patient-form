@@ -1,0 +1,114 @@
+excel_field,pdf_field
+last_name,PT Last Name
+gender,PT Gender Male
+gender,PT Gender Female
+first_name,PT First Name
+middle_initial,PT Middle Initial
+gender,PT Gender Other
+family_status,PT Family Status Married
+family_status,PT Family Status Single
+family_status,PT Family Status Child
+family_status,PT Family Status Other
+birth_date,PT Date Of Birth
+email,PT Email
+home_phone,PT House Phone Number
+mobile,PT Mobile Phone Number
+call_time,PT Best Call Time
+address1,PT Address
+address2,PT Address 2
+city,PT City
+state,PT State
+zip,PT ZipCode
+emergency_contact,PT Emergency Contact
+insured_last,Primary Last Name
+insured_first,Primary First Name
+insurance_id,Primary Insurance ID
+insured_birth,Primary DOB
+relationship,Relationship Insured Self
+relationship,Relationship Insured Spouse
+relationship,Relationship Insured Child
+relationship,Relationship Insured Other
+has_secondary,Secondary Insurance Yes
+has_secondary,Secondary Insurance No
+insured_employer,Insured Employers Name
+insured_plan,Insured Plan Name
+responsible_choice,Responsible Party Spouse
+responsible_choice,Responsible Party The person responsible
+responsible_choice,Responsible Both
+responsible_choice,Responsible The-not-applicable
+parent_last_name,Responsible Party Last Name
+parent_first_name,Responsible Party First Name
+parent_middle_initial,Responsible Party MI
+parent_birth_date,Responsible Party DOB
+parent_birth_date,Responsible Party Birthdate
+physician_name,Physician Name
+pharmacy_info,Name/Phone Pharmacy
+todays_date,Todays Date
+relationshipToPatient,Response on form relationship
+formCompleterName,Name of person filing out form
+allergies,Allergies Yes
+allergies,Allergies No
+allergy_details,Allergies List
+medications,Medications List
+taking_medication,Medication Yes
+taking_medication,Medication No
+serious_illness,Illness Yes
+serious_illness,Illness No
+illness_description,Illness List
+blood_transfusion,Blood Transfusion Yes
+blood_transfusion,Blood Transfusion No
+transfusion_date,Blood Transfusion Date
+pregnant,Pregnant
+nursing,Nursing
+birth_control,Birth Control
+anemia,Anemia
+blood_disease,Blood Disease
+development_delay,Development Delay
+fainting,Fainting
+hashimoto_disease,Hashimoto Disease
+heart_murmur,Heart Murmur
+jaundice,Jaundice
+liver_disease,Liver Disease
+pacemaker,Pacemaker
+rheumatism,Rheumatism
+sinus_problems,Sinus Problems
+stroke,Stroke
+ulcers,Ulcers
+arthritis,Arthritis
+cancer,Cancer
+diabetes,Diabetes
+genetic_syndrome,Genetic Syndrome
+head_injuries,Head Injuries
+hemophilia,Hemophilia
+joint_conditions,Joint Conditions
+muscular_dystrophy,Muscular Dystrophy
+radiation_treatment,Radiation Treatment
+scarlet_fever,Scarlet Fever
+situs_inversus,Situs inversus
+thyroid_problems,Thyroid Problems
+venereal_disease,Venereal Disease
+artificial_joints,Artificial Joints
+cerebral_palsy,Cerebral Palsy
+ehlers_danlos_syndrome,Ehlers-Danlos Syndrome
+glaucoma,Glaucoma
+heart_conditions,Heart Conditions
+hepatitis,Hepatitis
+kidney_disease,Kidney Disease
+nervous_disorders,Nervous Disorders
+respiratory_problems,Respiratory Problems
+seizure,Seizure
+spina_bifida,Spina Bifida
+tuberculosis,Tuberculosis
+williams_syndrome,Williams Syndrome
+asthma,Asthma
+diflucan,Diflucan
+epilepsy,Epilepsy
+hivaids,HIV/AIDS
+heart_disease,Heart Disease
+high_blood_pressure,High Blood Pressure
+latent_tb,Latent TB
+neutropenia,Neutropenia
+rheumatic_fever,Rheumatic Fever
+shortness_of_breath,Shortness of Breath
+stomachs_problems,Stomach Problems
+tumors,Tumors
