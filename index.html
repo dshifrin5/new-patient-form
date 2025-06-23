@@ -267,13 +267,41 @@
       <!-- ID Upload -->
       <div class="mb-3">
         <label class="form-label">Upload Government-Issued ID <span class="required-star">*</span></label>
-        <input type="file" class="form-control required" name="id_upload" id="id-upload" accept=".jpg,.jpeg,.png" onchange="handleUpload(this, 'id-preview')" />
+        <label>Upload Insurance Card <span class="required-star">*</span></label>
+        <div class="d-flex gap-2">
+          <!-- 1) Library picker -->
+          <button type="button" class="btn btn-outline-secondary"
+                  onclick="document.getElementById('insurance-file').click()">
+            Choose Existing
+          </button>
+          <input
+            type="file"
+            id="insurance-file"
+            accept="image/*"
+            style="display:none"
+            onchange="handleUpload(this, 'insurance-preview')"
+          />
+
+          <!-- 2) Direct camera -->
+          <button type="button" class="btn btn-outline-secondary"
+                  onclick="document.getElementById('insurance-camera').click()">
+            Take Photo
+          </button>
+          <input
+            type="file"
+            id="insurance-camera"
+            accept="image/*"
+            capture="environment"
+            style="display:none"
+            onchange="handleUpload(this, 'insurance-preview')"
+          />
+        </div>
         <canvas id="id-preview" style="display:none; max-width:100%; height:auto;"></canvas>
       </div>
 
       <div class="mb-3">
         <label class="form-label">Upload Insurance Card Picture <span class="required-star">*</span></label>
-        <input type="file" class="form-control required" name="insurance_card" id="insurance-upload" accept=".jpg,.jpeg,.png" onchange="handleUpload(this, 'insurance-preview')" />
+        <input type="file" class="form-control required" name="insurance_card" id="insurance-upload" accept="image/*" onchange="handleUpload(this, 'insurance-preview')" />
         <canvas id="insurance-preview" style="display:none; max-width:100%; height:auto;"></canvas>
 
       </div>
@@ -293,7 +321,7 @@
       </div>
       <div class="mb-3" id="secondaryUpload" style="display:none">
         <label class="form-label">Upload Secondary Insurance Card <span class="optional">(optional)</span></label>
-        <input type="file" class="form-control" name="secondary_card" accept=".jpg,.jpeg,.png" />
+        <input type="file" class="form-control" name="secondary_card" accept="image/*" />
       </div>
       <div class="d-flex justify-content-between">
         <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
@@ -1158,7 +1186,7 @@ const obj = Object.fromEntries(formData.entries());
     console.log("📤 submitting JSON payload:", obj);
 
     const submitPayload = () => {
-      fetch("https://8f2e-108-30-11-8.ngrok-free.app/submit", {
+      fetch("https://aee6-108-30-11-8.ngrok-free.app/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(obj)
