@@ -1117,25 +1117,33 @@
   document.getElementById('multiStepForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const canvas = document.getElementById('signature-pad');
-    const idCanvas = document.getElementById('id-preview');
-    const insuranceCanvas = document.getElementById('insurance-preview');
-    const secondaryInput = document.querySelector('input[name="secondary_card"]');
+    const canvas            = document.getElementById('signature-pad');
+    const idCanvas          = document.getElementById('id-preview');
+    const insuranceCanvas   = document.getElementById('insurance-preview');
+    const secondaryInput    = document.querySelector('input[name="secondary_card"]');
 
     const formData = new FormData(e.target);
-    const obj = Object.fromEntries(formData.entries());
+    const obj      = Object.fromEntries(formData.entries());
+
+  // 1) Signature
     obj.signature = canvas ? canvas.toDataURL("image/png") : "";
 
-    if (insuranceCanvas) {
-      obj.insurance_card_base64 = insuranceCanvas.toDataURL("image/png");
+  // 2) Government-ID canvas  ← **NEW**
+    if (idCanvas && idCanvas.style.display !== "none") {
+      const idData = idCanvas.toDataURL("image/png");
+      obj.parent_id_base64 = idData;  // for Excel/logging if you need
+      obj.parent_id        = idData;  // this is what your Flask code checks
     }
 
+  // 3) Primary insurance-card canvas
     if (insuranceCanvas && insuranceCanvas.style.display !== "none") {
-      obj.insurance_card = insuranceCanvas.toDataURL("image/png");
+      const icData = insuranceCanvas.toDataURL("image/png");
+      obj.insurance_card_base64 = icData;
+      obj.insurance_card        = icData;
     }
 
     const submitPayload = () => {
-      fetch("https://5040-108-30-11-8.ngrok-free.app/submit", {
+      fetch("https://f0e0-108-30-11-8.ngrok-free.app/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(obj)
@@ -1143,9 +1151,9 @@
         if (response.ok) {
           alert("Form submitted successfully!");
           e.target.reset();
-          if (canvas) clearSignature();
-          if (idCanvas) clearCanvas(idCanvas);
-          if (insuranceCanvas) clearCanvas(insuranceCanvas);
+          if (canvas)           clearSignature();
+          if (idCanvas)         clearCanvas(idCanvas);
+          if (insuranceCanvas)  clearCanvas(insuranceCanvas);
           showStep(0);
         } else {
           alert("Submission failed.");
@@ -1153,6 +1161,7 @@
       });
     };
 
+  // 4) Optional secondary-card file
     if (secondaryInput && secondaryInput.files[0]) {
       const reader = new FileReader();
       reader.onload = function (e) {
@@ -1164,6 +1173,7 @@
       submitPayload();
     }
   });
+
 
   function clearCanvas(canvasElement) {
     const ctx = canvasElement.getContext("2d");
