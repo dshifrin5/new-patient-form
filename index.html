@@ -1114,60 +1114,42 @@
     canvas.addEventListener('touchend', stopDrawing);
   }
 
-
   document.getElementById('multiStepForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    //–– Helpers ––//
     function getCanvasDataURL(canvas) {
-      if (!canvas || canvas.style.display === 'none') return null;
       const data = canvas.toDataURL("image/png");
-      // blank canvas yields ~1.2 KB; only return if it’s “real”:
+      // blank‐canvas data URLs are ~1.2 KB; use 1500 as a safe cutoff
       return data.length > 1500 ? data : null;
     }
-    function readFileAsDataURL(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload  = () => resolve(reader.result);
-        reader.onerror = () => reject(reader.error);
-        reader.readAsDataURL(file);
-      });
-    }
 
-    //–– Grab elements ––//
     const canvas            = document.getElementById('signature-pad');
     const idCanvas          = document.getElementById('id-preview');
     const insuranceCanvas   = document.getElementById('insurance-preview');
-    const idUploadInput     = document.getElementById('id-upload');
-    const insureUploadInput = document.getElementById('insurance-upload');
     const secondaryInput    = document.querySelector('input[name="secondary_card"]');
 
-    //–– Build base object ––//
     const formData = new FormData(e.target);
-    // remove raw file fields so they don’t show up twice
     formData.delete("id_upload");
     formData.delete("insurance_card");
     formData.delete("secondary_card");
-    const obj = Object.fromEntries(formData.entries());
 
-    //–– 1) Signature ––//
+const obj = Object.fromEntries(formData.entries());
+
+
+  // 1) Signature
     obj.signature = canvas ? canvas.toDataURL("image/png") : "";
 
-    //–– 2) Government-ID: canvas OR file ––//
-    let idData = getCanvasDataURL(idCanvas);
-    if (!idData && idUploadInput.files[0]) {
-      idData = await readFileAsDataURL(idUploadInput.files[0]);
-    }
+
+
+// 2) Government-ID canvas
+    const idData = getCanvasDataURL(idCanvas);
     if (idData) {
       obj.parent_id        = idData;
       obj.parent_id_base64 = idData;
     }
 
-    //–– 3) Insurance-card: canvas OR file ––//
-    let icData = getCanvasDataURL(insuranceCanvas);
-    if (!icData && insureUploadInput.files[0]) {
-      icData = await readFileAsDataURL(insureUploadInput.files[0]);
-    }
+// 3) Primary insurance-card canvas
+    const icData = getCanvasDataURL(insuranceCanvas);
     if (icData) {
       obj.insurance_card        = icData;
       obj.insurance_card_base64 = icData;
@@ -1175,19 +1157,18 @@
 
     console.log("📤 submitting JSON payload:", obj);
 
-    //–– 4) Secondary card (optional) + send ––//
-    const doFetch = () => {
-      fetch("https://2592-108-30-11-8.ngrok-free.app/submit", {
+    const submitPayload = () => {
+      fetch("https://1f76-108-30-11-8.ngrok-free.app/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(obj)
-      }).then(res => {
-        if (res.ok) {
+      }).then(async (response) => {
+        if (response.ok) {
           alert("Form submitted successfully!");
           e.target.reset();
-          if (canvas) clearSignature();
-          if (idCanvas) clearCanvas(idCanvas);
-          if (insuranceCanvas) clearCanvas(insuranceCanvas);
+          if (canvas)           clearSignature();
+          if (idCanvas)         clearCanvas(idCanvas);
+          if (insuranceCanvas)  clearCanvas(insuranceCanvas);
           showStep(0);
         } else {
           alert("Submission failed.");
@@ -1195,25 +1176,30 @@
       });
     };
 
+  // 4) Optional secondary-card file
     if (secondaryInput && secondaryInput.files[0]) {
-      const raw = await readFileAsDataURL(secondaryInput.files[0]);
-      obj.secondary_card = raw;
-      doFetch();
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        obj.secondary_card = e.target.result;
+        submitPayload();
+      };
+      reader.readAsDataURL(secondaryInput.files[0]);
     } else {
-      doFetch();
+      submitPayload();
     }
   });
 
-  //–– Canvas clear helpers ––//
-  function clearCanvas(c) {
-    const ctx = c.getContext("2d");
-    ctx.clearRect(0, 0, c.width, c.height);
-    c.style.display = "none";
+
+  function clearCanvas(canvasElement) {
+    const ctx = canvasElement.getContext("2d");
+    ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+    canvasElement.style.display = "none";
   }
+
   window.clearSignature = () => {
-    const c = document.getElementById('signature-pad');
-    const ctx = c.getContext('2d');
-    ctx.clearRect(0, 0, c.width, c.height);
+    const canvas = document.getElementById('signature-pad');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
   };
 </script>
 <script>
