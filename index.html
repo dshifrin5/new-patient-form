@@ -28,23 +28,6 @@
       height: 200px;
     }
 
-    <div id="loadingOverlay" style="
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(255, 255, 255, 0.8);
-      z-index: 9999;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: #007bff;
-      text-align: center;
-    ">
-      Submitting...<br>Please wait.
-    </div>
-
     .step {
       display: none;
     }
@@ -1134,8 +1117,7 @@
   document.getElementById('multiStepForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const loadingOverlay = document.getElementById("loadingOverlay"); // ✅ ADDED
-    loadingOverlay.style.display = "flex"; // ✅ ADDED
+
 
     function getCanvasDataURL(canvas) {
       const data = canvas.toDataURL("image/png");
@@ -1178,12 +1160,12 @@ const obj = Object.fromEntries(formData.entries());
     console.log("📤 submitting JSON payload:", obj);
 
     const submitPayload = () => {
-      fetch("https://d41a-108-30-11-8.ngrok-free.app/submit", {
+      fetch("https://5b74-108-30-11-8.ngrok-free.app/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(obj)
       }).then(async (response) => {
-        loadingOverlay.style.display = "none"; // ✅ ADDED
+
 
         if (response.ok) {
           alert("Form submitted successfully!");
@@ -1195,10 +1177,6 @@ const obj = Object.fromEntries(formData.entries());
         } else {
           alert("Submission failed.");
         }
-      }).catch((err) => {
-        loadingOverlay.style.display = "none"; // ✅ ADDED
-        alert("There was an error submitting the form.");
-        console.error(err);
       });
     };
 
