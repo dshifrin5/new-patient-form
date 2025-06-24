@@ -997,16 +997,19 @@
   function showStep(index) {
     steps.forEach((step, i) => step.classList.toggle('active', i === index));
     if (index === steps.length - 1) setupSignaturePad(); // step 6
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function nextStep() {
     if (currentStep < steps.length - 1) currentStep++;
     showStep(currentStep);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function prevStep() {
     if (currentStep > 0) currentStep--;
     showStep(currentStep);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function validateStepAndNext() {
@@ -1161,7 +1164,7 @@ const obj = Object.fromEntries(formData.entries());
     console.log("📤 submitting JSON payload:", obj);
 
     const submitPayload = () => {
-      fetch("https://e535-108-30-11-8.ngrok-free.app/submit", {
+      fetch("https://046b-108-30-11-8.ngrok-free.app/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(obj)
