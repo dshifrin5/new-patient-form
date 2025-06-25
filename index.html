@@ -1017,12 +1017,36 @@
     let valid = true;
 
     activeStep.querySelectorAll('.required').forEach(el => {
-      if ((el.type === 'checkbox' && !el.checked) || (el.type !== 'checkbox' && !el.value.trim())) {
-        el.classList.add('invalid');
-        valid = false;
+      if (el.type === 'checkbox') {
+        if (!el.checked) {
+          el.classList.add('invalid');
+          valid = false;
+        } else {
+          el.classList.remove('invalid');
+        }
       } else {
-        el.classList.remove('invalid');
+        const value = el.value.trim();
+        const isEmailField = el.type === "email" || el.name === "email" || el.name.includes("email");
+
+        const errorMsgId = `${el.name}_error`;
+        let errorMsg = document.getElementById(errorMsgId);
+        if (!errorMsg) {
+          errorMsg = document.createElement("div");
+          errorMsg.id = errorMsgId;
+          errorMsg.className = "text-danger small mt-1";
+          el.parentNode.appendChild(errorMsg);
+        }
+
+        if (!value || (isEmailField && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))) {
+          el.classList.add('invalid');
+          errorMsg.textContent = isEmailField && value ? "Please enter a valid email address." : "This field is required.";
+          valid = false;
+        } else {
+          el.classList.remove('invalid');
+          errorMsg.textContent = "";
+        }
       }
+
     });
 
     if (activeStep.id === "step3" && document.getElementById('responsibleChoice').value === "child") {
@@ -1034,6 +1058,17 @@
           el.classList.remove('invalid');
         }
       });
+    }
+
+    if (!valid) {
+        const firstInvalid = activeStep.querySelector('.invalid');
+        if (firstInvalid) {
+          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstInvalid.focus({ preventScroll: true });
+        }
+      } else {
+        nextStep();
+      }
     }
 
     if (valid) nextStep();
@@ -1164,7 +1199,7 @@ const obj = Object.fromEntries(formData.entries());
     console.log("📤 submitting JSON payload:", obj);
 
     const submitPayload = () => {
-      fetch("https://deba-108-30-11-8.ngrok-free.app/submit", {
+      fetch("http://localhost:5002/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(obj)
