@@ -1068,6 +1068,29 @@
         }
       });
     }
+    
+    // === Validate OPTIONAL fields (English-only if filled) ===
+    activeStep.querySelectorAll('input:not(.required):not([type="checkbox"]), textarea:not(.required)').forEach(el => {
+      const value = el.value.trim();
+      const errorMsgId = `${el.name}_error`;
+      let errorMsg = document.getElementById(errorMsgId);
+
+      if (value && /[^\x00-\x7F]/.test(value)) {
+        el.classList.add("invalid");
+        if (!errorMsg) {
+          errorMsg = document.createElement("div");
+          errorMsg.id = errorMsgId;
+          errorMsg.className = "text-danger small mt-1";
+          el.parentNode.appendChild(errorMsg);
+        }
+        errorMsg.textContent = "Please use English characters only.";
+        valid = false;
+      } else {
+        el.classList.remove("invalid");
+        if (errorMsg) errorMsg.textContent = "";
+      }
+    });
+
 
 
     if (valid) nextStep();
@@ -1198,7 +1221,7 @@ const obj = Object.fromEntries(formData.entries());
     console.log("📤 submitting JSON payload:", obj);
 
     const submitPayload = () => {
-      fetch("https://f313-108-30-11-8.ngrok-free.app/submit", {
+      fetch("https://c771-108-30-11-8.ngrok-free.app/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(obj)
