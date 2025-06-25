@@ -1037,14 +1037,23 @@
           el.parentNode.appendChild(errorMsg);
         }
 
-        if (!value || (isEmailField && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))) {
+        if (!value) {
           el.classList.add('invalid');
-          errorMsg.textContent = isEmailField && value ? "Please enter a valid email address." : "This field is required.";
+          errorMsg.textContent = "This field is required.";
+          valid = false;
+        } else if (isEmailField && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          el.classList.add('invalid');
+          errorMsg.textContent = "Please enter a valid email address.";
+          valid = false;
+        } else if (!isEmailField && /[^\x00-\x7F]/.test(value)) {
+          el.classList.add('invalid');
+          errorMsg.textContent = "Please use English characters only.";
           valid = false;
         } else {
           el.classList.remove('invalid');
           errorMsg.textContent = "";
         }
+
       }
 
     });
@@ -1189,7 +1198,7 @@ const obj = Object.fromEntries(formData.entries());
     console.log("📤 submitting JSON payload:", obj);
 
     const submitPayload = () => {
-      fetch("https://2245-108-30-11-8.ngrok-free.app/submit", {
+      fetch("https://f313-108-30-11-8.ngrok-free.app/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(obj)
