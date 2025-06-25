@@ -1060,16 +1060,6 @@
       });
     }
 
-    if (!valid) {
-        const firstInvalid = activeStep.querySelector('.invalid');
-        if (firstInvalid) {
-          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          firstInvalid.focus({ preventScroll: true });
-        }
-      } else {
-        nextStep();
-      }
-    }
 
     if (valid) nextStep();
   }
@@ -1199,7 +1189,7 @@ const obj = Object.fromEntries(formData.entries());
     console.log("📤 submitting JSON payload:", obj);
 
     const submitPayload = () => {
-      fetch("https://38f6-108-30-11-8.ngrok-free.app/submit", {
+      fetch("https://2245-108-30-11-8.ngrok-free.app/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(obj)
