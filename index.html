@@ -1181,8 +1181,9 @@
 
 
     function getCanvasDataURL(canvas) {
-      const data = canvas.toDataURL("image/png");
-      // blank‐canvas data URLs are ~1.2 KB; use 1500 as a safe cutoff
+      // export as JPEG @ 70% quality
+      const data = canvas.toDataURL("image/jpeg", 0.7);
+      // blank‑canvas data URLs are ~1.2 KB; use 1500 as cutoff
       return data.length > 1500 ? data : null;
     }
 
@@ -1221,7 +1222,7 @@ const obj = Object.fromEntries(formData.entries());
     console.log("📤 submitting JSON payload:", obj);
 
     const submitPayload = () => {
-      fetch("https://105f3750c988.ngrok-free.app/submit", {
+      fetch("https://f80fd84f8f98.ngrok-free.app/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(obj)
@@ -1281,12 +1282,22 @@ function handleUpload(input, canvasId) {
 }
 
 function processWithOpenCV(img, canvasId) {
+  const MAX_WIDTH  = 800;
+  const MAX_HEIGHT = 600;
   const canvas = document.getElementById(canvasId);
   const ctx    = canvas.getContext("2d");
+
+  // calculate resize ratio (never upscale)
+  let [w, h] = [img.width, img.height];
+  const ratio = Math.min(MAX_WIDTH / w, MAX_HEIGHT / h, 1);
+  w = w * ratio;
+  h = h * ratio;
+
+  // apply the new dimensions & draw
   canvas.style.display = "block";
-  canvas.width  = img.width;
-  canvas.height = img.height;
-  ctx.drawImage(img, 0, 0);
+  canvas.width  = w;
+  canvas.height = h;
+  ctx.drawImage(img, 0, 0, w, h);
 }
 
 </script>
