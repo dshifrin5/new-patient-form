@@ -120,7 +120,7 @@
           <input type="tel" class="form-control required" name="mobile" />
         </div>
         <div class="col-md-6 mb-3">
-          <label class="form-label">Home Phone <span class="optional">(optional)</span></label>
+          <label class="form-label">Emergency Contact <span class="required-star">*</span></label>
           <input type="tel" class="form-control" name="home_phone" />
         </div>
       </div>
@@ -1222,7 +1222,7 @@ const obj = Object.fromEntries(formData.entries());
     console.log("📤 submitting JSON payload:", obj);
 
     const submitPayload = () => {
-      fetch("https://d5215d3fdb1c.ngrok-free.app/submit", {
+      fetch("https://548b177bea9a.ngrok-free.app/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(obj)
